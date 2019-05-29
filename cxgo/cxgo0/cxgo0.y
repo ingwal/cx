@@ -10,7 +10,7 @@
 
 	var PRGRM0 *CXProgram
 
-	var lineNo int = -1
+	var LineNo int = -1
 	var replMode bool = false
 	var inREPL bool = false
 	var inFn bool = false
@@ -195,7 +195,7 @@ package_declaration:
 import_declaration:
                 IMPORT STRING_LITERAL SEMICOLON
                 {
-			DeclareImport($2, CurrentFileName, lineNo)
+			DeclareImport($2, CurrentFileName, LineNo)
                 }
                 ;
 
@@ -203,7 +203,7 @@ function_header:
                 FUNC IDENTIFIER
                 {
 			if pkg, err := PRGRM0.GetCurrentPackage(); err == nil {
-				fn := MakeFunction($2, CurrentFileName, lineNo)
+				fn := MakeFunction($2, CurrentFileName, LineNo)
 				pkg.AddFunction(fn)
 
                                 $$ = fn
@@ -220,7 +220,7 @@ function_header:
 			fnName := $3[0].CustomType.Name + "." + $5
 
 			if pkg, err := PRGRM0.GetCurrentPackage(); err == nil {
-				fn := MakeFunction(fnName, CurrentFileName, lineNo)
+				fn := MakeFunction(fnName, CurrentFileName, LineNo)
 				pkg.AddFunction(fn)
 
                                 fn.AddInput($3[0])
@@ -321,15 +321,15 @@ declaration_specifiers:
                 }
         |       IDENTIFIER
                 {
-			$$ = DeclarationSpecifiersStruct($1, "", false, CurrentFileName, lineNo)
+			$$ = DeclarationSpecifiersStruct($1, "", false, CurrentFileName, LineNo)
                 }
         |       IDENTIFIER PERIOD IDENTIFIER
                 {
-			$$ = DeclarationSpecifiersStruct($3, $1, true, CurrentFileName, lineNo)
+			$$ = DeclarationSpecifiersStruct($3, $1, true, CurrentFileName, LineNo)
                 }
 	|       type_specifier PERIOD IDENTIFIER
 		{
-			$$ = DeclarationSpecifiersStruct($3, TypeNames[$1], true, CurrentFileName, lineNo)
+			$$ = DeclarationSpecifiersStruct($3, TypeNames[$1], true, CurrentFileName, LineNo)
 		}
 		/* type_specifier declaration_specifiers */
 	/* |       type_specifier */
@@ -670,8 +670,9 @@ iteration_statement:
                 FOR expression compound_statement
         |       FOR expression_statement expression_statement compound_statement
         |       FOR expression_statement expression_statement expression compound_statement
-        |       FOR declaration expression_statement compound_statement
-        |       FOR declaration expression_statement expression compound_statement
+// Temporarily disabled because they are not in cxgo.y
+//        |       FOR declaration expression_statement compound_statement
+//        |       FOR declaration expression_statement expression compound_statement
                 ;
 
 jump_statement: GOTO IDENTIFIER SEMICOLON

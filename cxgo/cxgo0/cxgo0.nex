@@ -2,7 +2,7 @@
 }
 /(\r\n|\r|\n)/ {
 	lval.line++
-	lineNo++
+	LineNo++
 	token := f(NEWLINE)
 	if token != NEWLINE {
 		return token
@@ -15,7 +15,7 @@
 	/* skip comments */
 	noLines := countNewLines([]byte(yylex.Text()))
 	lval.line += noLines
-        lineNo += noLines
+        LineNo += noLines
 }
 /aff/                     { lval.tok = yylex.Text(); return f(AFF)  }
 /bool/                    { lval.tok = yylex.Text(); return f(BOOL) }
@@ -46,8 +46,8 @@
 /ui16/                    { lval.tok = yylex.Text(); return f(UI16)}
 /ui32/                    { lval.tok = yylex.Text(); return f(UI32)}
 /ui64/                    { lval.tok = yylex.Text(); return f(UI64)}
-/union/                   { return f(UNION) }
-/#/                      { return f(INFER)      }
+/union/                   { return f(UNION)      }
+/#/                       { return f(INFER)      }
 /&/                       { lval.tok = yylex.Text(); return f(REF_OP) }
 /\+/                      { lval.tok = yylex.Text(); return f(ADD_OP) }
 /-/                       { lval.tok = yylex.Text(); return f(SUB_OP) }
@@ -73,7 +73,7 @@
 /\+\+/                    { return f(INC_OP)}
 /--/                      { return f(DEC_OP)}
 /&&/                      { return f(AND_OP)}
-/\|\|/                      { return f(OR_OP)}
+/\|\|/                    { return f(OR_OP)}
 /<=/                      { return f(LE_OP)}
 />=/                      { return f(GE_OP)}
 /==/                      { return f(EQ_OP)}
@@ -146,12 +146,10 @@
 	return f(STRING_LITERAL)
 }
 /true/ {
-	// lval.i32 = int32(1)
 	lval.bool = true
 	return f(BOOLEAN_LITERAL)
 }
 /false/ {
-	// lval.i32 = int32(0)
 	lval.bool = false
 	return f(BOOLEAN_LITERAL)
 }
@@ -177,7 +175,7 @@
 }
 /([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][-+]?[0-9]+)?D/ {
 	result ,_ := strconv.ParseFloat(yylex.Text()[:len(yylex.Text()) - 1], 64)
-	lval.f64 = float64 (result)
+	lval.f64 = float64(result)
 	return f(DOUBLE_LITERAL)
 }
 /[_a-zA-Z][_a-zA-Z0-9]*/ {
@@ -188,10 +186,11 @@
 }
 //
 package cxgo0
+
 import (
 	"fmt"
 	"strconv"
-	
+
 	"github.com/skycoin/cx/cx"
 )
 
@@ -204,7 +203,7 @@ func f (token int) int {
 		return SEMICOLON
 	} else {
 		switch token {
-		case IDENTIFIER,
+			case IDENTIFIER,
 			
 			BOOL, BYTE, STR,
 			I8, I16, I32, I64,
@@ -242,8 +241,4 @@ func (yylex Lexer) Error (e string) {
 	}
 	
 	yylex.Stop()
-}
-
-func main () {
-	
 }

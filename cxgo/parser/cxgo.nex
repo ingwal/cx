@@ -17,7 +17,7 @@
 	lval.line += noLines
         LineNo += noLines
 }
-/aff/                     { lval.tok = yylex.Text(); return f(AFF) }
+/aff/                     { lval.tok = yylex.Text(); return f(AFF)  }
 /bool/                    { lval.tok = yylex.Text(); return f(BOOL) }
 /byte/                    { lval.tok = yylex.Text(); return f(BYTE) }
 /break/                   { return f(BREAK) }
@@ -188,11 +188,12 @@
 package parser
 
 import (
-       "strconv"
+	"strconv"
+
 	"github.com/skycoin/cx/cx"
 	. "github.com/skycoin/cx/cxgo/actions"
-	"github.com/skycoin/cx/cxgo/cxgo0")    // Only for CurrentFilename
-
+	"github.com/skycoin/cx/cxgo/cxgo0"    // Only for CurrentFilename
+)
 
 var insert bool
 
@@ -213,7 +214,7 @@ func f (token int) int {
 			INT_LITERAL, FLOAT_LITERAL, DOUBLE_LITERAL, LONG_LITERAL,
 			RETURN, BREAK, CONTINUE,
 			INC_OP, DEC_OP,
-			
+
 			RPAREN, RBRACE, RBRACK:
 			insert = true
 		default: insert = false
@@ -225,14 +226,8 @@ func f (token int) int {
 func countNewLines (s []byte) int {
 	count := 0
 	for i := 0; i < len(s); i++ {
-		// if s[i] == '\r' && len(s) > i && s[i + 1] == '\n' {
-		// 	count++
-		// 	i++
-		// 	continue
-		// }
 		if s[i] == '\n' {
 			count++
-			continue
 		}
 	}
 	return count
@@ -247,4 +242,3 @@ func (yylex Lexer) Error (e string) {
 	
 	yylex.Stop()
 }
-
