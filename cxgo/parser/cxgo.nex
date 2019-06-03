@@ -180,7 +180,7 @@
 }
 /[_a-zA-Z][_a-zA-Z0-9]*/ {
 	lval.tok = yylex.Text()
-	return f(IDENTIFIER)
+	return f2(IDENTIFIER, lval.tok)
 }
 >      {
 }
@@ -205,7 +205,8 @@ func f (token int) int {
 		tokenName := tokenNames[token]
 		if tokenName == "" {
 			fmt.Println("Token: ", token)
-		} else {
+		} else if token != IDENTIFIER {
+			// IDENTIFIER is handled by f2()
 			fmt.Println("Token: ", tokenName)
 		}
 	}
@@ -233,6 +234,20 @@ func f (token int) int {
 		}
 		return token
 	}
+}
+
+func f2 (token int, tok string) int {
+	// Debug
+	if DebugLexer {
+		tokenName := tokenNames[token]
+		if token == IDENTIFIER {
+			fmt.Println("Token: ", tokenName, tok)
+		} else {
+			fmt.Println("Token: ", tokenName)
+		}
+	}
+
+	return f(token)
 }
 
 func countNewLines (s []byte) int {
